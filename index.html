@@ -1,0 +1,224 @@
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Mason Usage</title>
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+	<style>
+		body {
+			left: 0;
+			right: 0;
+			width: 50%;
+			margin: auto;
+			max-width: 850px;
+			min-width: 400px;
+			font-size: 18px;
+			padding: 20px;
+		}
+	</style>
+</head>
+
+<body>
+
+
+	<h3><b><a href="https://pub.dev/packages/mason">Mason</a> Bricks Usage:</b></h3>
+	</br>
+
+	There are two ways of using bricks. There are local bricks, and global bricks. With global bricks you will not have
+	to repeat the actions of initializing mason in new projects and adding bricks for every new project. <a
+		href="https://pub.dev/packages/mason_cli#add-usage">Here are the
+		details</a>.
+
+	</br> </br>
+	<ol>
+		<li><b>init mason</b>(<i>Needed only when you want to add some local bricks only for current project. If you
+				want to
+				use in your project only global bricks, skip this step</i>)
+			<ul>
+				<li>Open the <code>flutter</code> project, and create <code>mason</code> folder</li>
+				<li>Move to that folder in terminal(ex.: <code>cd mason</code>)</li>
+				<li>Run <code>mason init</code> command</li>
+			</ul>
+
+			Globally <code>mason</code> will be automatically initiated in
+			<code>/Users/your-name/.mason-cache/global</code> when you will add
+			new
+			global bricks. That's why you should skip this step, if you want to use global bricks.
+			</br>
+		</li>
+		</br> </br>
+		<li>
+			<b>Add reference to bricks</b>(register) from this repository.</br>
+			There are two options to do that:
+			</br>
+			<ol>
+				<li>
+					<b>Through command line(recommended):</b>
+					<ul>
+						<li>Choose bricks, that you want to add:
+							</br>
+							<div>
+								<input type="checkbox" class="brick-checkbox" name="theme" checked>
+								<label for="theme">theme</label>
+							</div>
+							<div>
+								<input type="checkbox" class="brick-checkbox" name="crashlytics_helper" checked>
+								<label for="theme">crashlytics_helper</label>
+							</div>
+							<div>
+								<input type="checkbox" class="brick-checkbox" name="device_info_helper" checked>
+								<label for="theme">device_info_helper</label>
+							</div>
+						</li>
+						<li>Choose whether add these bricks globally, or locally.
+							<i><b>Globally</b> means that you will <b>not</b> have to repeat this action of adding
+								bricks for
+								every new project. <a href="https://pub.dev/packages/mason_cli#add-usage">More
+									detailed</a>.</i>
+							</br>
+							<div>
+								<input type="checkbox" name="global" checked>
+								<label for="global">global</label>
+							</div>
+						</li>
+						<li>Run the following code in terminal. <b>If you choosed the local way of adding bricks, then
+								run the code in the <code>mason</code> folder(from step 1)</b>
+							</br>
+							<code id="add-code-block"></code>
+							</br>
+						</li>
+					</ul>
+
+				</li>
+				<li>
+					<b>Manually</b>
+					<ul>
+						<li>Open file <code><flutter-project>/mason/mason.yaml</code>(if you want to add bricks
+							locally). For
+							global bricks open <code>/Users/your-name/.mason-cache/global/mason.yaml</code></li>
+						<li>Add references to the desired bricks
+							<pre>
+								 <code>
+bricks:
+  # Add code below
+  theme:
+    git:
+      url: https://github.com/radomir9720/mason_bricks.git
+      path: theme
+  crashlytics_helper:
+    git:
+      url: https://github.com/radomir9720/mason_bricks.git
+      path: crashlytics_helper
+  device_info_helper:
+    git:
+      url: https://github.com/radomir9720/mason_bricks.git
+      path: device_info_helper
+								 </code>
+							</pre>
+
+						</li>
+						<li>Run <code>mason get</code></li>
+					</ul>
+				</li>
+			</ol>
+		</li>
+		</br>
+		<li>
+			<b>Generate bricks</b>
+			</br>
+			Path where to paste generated code relative to current directory.
+			</br>
+
+			</br>
+			<input type="text" id="path" name="path" required placeholder="Where to paste code" value="lib/"></br>
+			</br>
+			<i>For example if you are in root directory of your project(<code>&lt;flutter-project&gt;/</code>) and in
+				the field above
+				you've entered <code>lib/</code> path, then all brick files will be generated in
+				<code>&lt;flutter-project&gt;/lib/</code> folder</i>
+
+			</br></br>
+			<code id="make-code-block"></code>
+			</br></br>
+
+			If you want to use local brick, then these commands must be executed from
+			<code><flutter-project>/mason</code>
+			folder.
+
+			</br>
+		</li>
+	</ol>
+
+	P.S. if you've created some local bricks, don't forget to exclude <code>mason</code> folder in
+	<code>analysis_options.yaml</code>:
+	<pre>
+	<code>
+analyzer:
+  exclude:
+    - mason/**
+	</code>
+</pre>
+
+	<script>
+		let bricks = document.querySelectorAll('.brick-checkbox');
+		let addCommandCodeBlock = document.getElementById('add-code-block');
+		let makeCommandCodeBlock = document.getElementById('make-code-block');
+		let globalCheckbox = document.querySelector('input[name=global]');
+		let field = document.getElementById('path');
+
+		changeCodeContent();
+
+
+		// Adding event listeners to brick checkboxes
+		if (bricks != null) {
+			bricks.forEach(function (brick) {
+				brick.addEventListener('change', () => changeCodeContent());
+			})
+		}
+
+		// Adding event listener to global checkbox
+		globalCheckbox.addEventListener('change', () => changeCodeContent());
+
+		// Adding event listener to path input field
+		field.onchange = changeCodeContent;
+
+		function changeCodeContent() {
+			var selectedBricks = getSelectedBricks();
+			// 
+			var addCommands = generateAddCommand(selectedBricks, globalCheckbox.checked)
+			addCommandCodeBlock.textContent = addCommands;
+			// 
+			var makeCommands = generateMakeCommand(selectedBricks, field.value);
+			makeCommandCodeBlock.textContent = makeCommands;
+		}
+
+		function getSelectedBricks() {
+			if (bricks == null) return [];
+			return [...bricks].filter((e) => e.checked).map((e) => e.name);
+		}
+
+		function generateAddCommand(bricks, global) {
+			return bricks.map((e) => getAddCommand(e, global)).join(' && ');
+		}
+
+
+		function getAddCommand(brick, global) {
+			return `mason add ${brick}${global ? ' -g' : ''} --git-url https://github.com/radomir9720/mason_bricks.git --git-path ${brick}`;
+		}
+
+		function generateMakeCommand(bricks, path) {
+			return bricks.map((e) => getMakeCommand(e, path)).join(' && ');
+		}
+
+		function getMakeCommand(brick, path) {
+			return `mason make ${brick} -o ${path ?? '.'}`;
+		}
+	</script>
+
+</body>
+
+</html>
