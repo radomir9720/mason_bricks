@@ -18,9 +18,9 @@ environment:
 #  * an optional short description
 #  * an optional default value
 #  * an optional prompt phrase used when asking for the variable.
-vars:
-  name:
-    type: string
-    description: Your name
-    default: Dash
-    prompt: What is your name?
+# vars:
+#   name:
+#     type: string
+#     description: Your name
+#     default: Dash
+#     prompt: What is your name?
