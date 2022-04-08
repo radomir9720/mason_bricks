@@ -1,4 +1,5 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 
@@ -38,5 +39,13 @@ abstract class CrashlyticsHelper {
     try {
       FirebaseCrashlytics.instance.recordFlutterError(details);
     } on Object catch (_) {}
+  }
+}
+
+class FirebaseBlocObserver extends BlocObserver {
+  @override
+  void onError(BlocBase bloc, Object error, StackTrace stackTrace) {
+    super.onError(bloc, error, stackTrace);
+    CrashlyticsHelper.recordError(error, stackTrace);
   }
 }
